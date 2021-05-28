@@ -8,8 +8,18 @@ var timerEl = document.getElementById('timer');
 var questionEl = document.getElementById('question');
 var answerEl = document.getElementById('answers');
 var startQuizEl = document.getElementById('startQuiz');
-var theQuestion;
-
+var QuizEl = document.getElementById('Quiz');
+var theQuestion = 0;
+var timeRemaining = 0;
+var quizTimer;
+var yourGameIsOver = `
+    <h3>GAME OVER</h3>
+    <h4>Your score is ` + score + `points!</h4>
+    <h4>Please enter your name for the Scoreboard!
+    <input type=text id="name">
+    <button onclick="postHighScore()">Submit Your Score!!!</button>
+    <h4>If you want to try again click the Start Quiz button!</h4>`;
+var nameEl = document.getElementById('name');
 
 startQuizEl.addEventListener('click', startQuiz);
 
@@ -29,25 +39,32 @@ function questions() {
 
 
 function countdown() {
-    var time = 60;
+    timeRemaining = 60;
 
     var timeInterval = setInterval(function() {
-        time--
+        timeRemaining--
         timerEl.textContent ="Time remaining: " + time;
         //add the questions to the if statement
-        if(time === 0) {
-            alert('Sorry, Game Over');
+        if(timeRemaining === 0) {
+            gameOver();
         }
     }, 1000);
 };
 
 function startQuiz() {
+    timeRemaining = 60;
+    timerEl.innerHTML = timeRemaining;
+    quizTimer = countdown();
     questionsEl.innerText = questions.quizQuestion;
     document.write(questions);
-    for(var i=0; i<quizQuestions.length; i++) {
-        var answerButton = document.createElement('button')
-        answerButton.innerText = correctAnswer.text;
-        answerButton.classList.add('btn');
-        
-    }
+}
+
+function gameOver() {
+    clearInterval(timeRemaining);
+    QuizEl.innerHTML = yourGameIsOver;
+};
+
+function postHighScore() {
+    localStorage.setItem("score", score);
+    localStorage.setItem("scoreName", nameEl);
 }
